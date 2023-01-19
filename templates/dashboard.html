@@ -1,0 +1,257 @@
+﻿{% load static %}
+<!Doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale= 1.0">
+    <meta content="" name="keywords">
+    <title>Dashboard</title>
+    <meta content="" name="description">
+
+
+    <!-- Favicons -->
+    <link href="{% static 'img/1.png' %}" rel="icon">
+    <link href="{% static 'img/1.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="{% static 'lib/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <style>
+        
+        #chartContainer4, #chartContainer1, #chartContainer2{
+            padding-left: 60px;
+        
+        }
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+
+        
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="unit-5 overlay" style="        background-color: #2b3032a1;
+        background-blend-mode: multiply;
+        background-size: cover;
+        background-image: url('{% static '/images/form-back1.jpg'%}');">
+        <div class="container text-center">
+            <h2 style="color:white; text-shadow:1px 1px black" class="mb-0">Dashboard</h2>
+            <p class="mb-0 unit-6"><a style="color:white;" href="/home">Home</a> <span style="color:black;" class="sep">></span> <span style="color:white;">Dashboard</span></p>
+        </div>
+    </div>
+    <div class="container text-center">
+        <h2 style="font-weight: bold; border: inherit;
+        color: #2b3032a1;"
+            class="mb-0">
+            Applicant's Skills and Qualifications
+        </h2>
+    </div>
+
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <!-- Chart code -->
+    <script>
+        am4core.ready(function () {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
+            var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+
+            series.accuracy = 4;
+            series.step = 15;
+            series.rotationThreshold = 0.7;
+            series.maxCount = 200;
+            series.minWordLength = 2;
+            series.labels.template.margin(4, 4, 4, 4);
+            series.maxFontSize = am4core.percent(30);
+
+            series.text = "{{skills}}";
+
+            series.colors = new am4core.ColorSet();
+            series.colors.passOptions = {}; // makes it loop
+
+            //series.labelsContainer.rotation = 45;
+            series.angles = [0, -90];
+            series.fontWeight = "700"
+
+            setInterval(function () {
+                series.dataItems.getIndex(Math.round(Math.random() * (series.dataItems.length - 1))).setValue("value", Math.round(Math.random() * 10));
+            }, 10000)
+
+        }); // end am4core.ready()
+    </script>
+
+    <!-- HTML -->
+    <div id="chartdiv"></div>
+    <hr style=" border: 2px solid grey; border-radius: 2px;" >
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    
+    <div id="chartContainer1" style=" width: 70%; height: 400px; display: inline-block;"></div>
+    <div id="chartContainer4" style="width: 70%; height: 400px;display: inline-block;"></div>
+    <div id="chartContainer2" style=" width: 70%; height: 400px; display: inline-block;"></div>
+
+    <script>
+
+        var chart = new CanvasJS.Chart("chartContainer1",
+            {
+                animationEnabled: true,
+                title: {
+                    text: "Big_5"
+                },
+                axisX: {
+                    interval: 10,
+                },
+                data: [
+                    {
+                        type: "column",
+
+                        legendMarkerType: "triangle",
+                        legendMarkerColor: "green",
+                        color: "#741de4",
+                        showInLegend: true,
+                        legendText: "Big 5",
+                        dataPoints: [
+                            { x: 10, y: {{openness}}, label: "openness" },
+                            { x: 20, y: {{conscientiousness}}, label: "Conscientiousness" },
+                            { x: 30, y: {{Extraversion}}, label: "Extraversion" },
+                            { x: 40, y: {{Agreeableness}}, label: "Agreeableness" },
+                            { x: 50, y: {{Emotional_range}}, label: "Emotional Range" }
+                        ]
+                    },
+                ]
+            });
+        chart.render();
+
+        var chart = new CanvasJS.Chart("chartContainer4",
+            {
+                animationEnabled: true,
+                title: {
+                    text: "Needs"
+                },
+                axisX: {
+                    interval: 10,
+                },
+                data: [
+                    {
+                        type: "column",
+
+                        legendMarkerType: "triangle",
+                        legendMarkerColor: "green",
+                        color: "#741de4",
+                        showInLegend: true,
+                        legendText: "Needs",
+                        dataPoints: [
+                            { x: 10, y: {{Challenge}}, label: "Challenge" },
+                            { x: 20, y: {{Closeness}}, label: "Closeness" },
+                            { x: 30, y: {{Curiosity}}, label: "Curiosity" },
+                            { x: 40, y: {{Excitement}}, label: "Agreeableness" },
+                            { x: 50, y: {{Harmony}}, label: "Harmony" },
+                            { x: 60, y: {{Ideal}}, label: "Ideal" },
+                            { x: 70, y: {{Liberty}}, label: "Liberty" },
+                            { x: 80, y: {{Love}}, label: "Love" },
+                            { x: 90, y: {{Practicality}}, label: "Practicality" },
+                            { x: 100, y: {{Self_expression}}, label: "Self_expression" },
+                            { x: 110, y: {{Stability}}, label: "Stability" },
+                            
+                        ]
+                    },
+                ]
+            });
+        chart.render();
+
+        var chart = new CanvasJS.Chart("chartContainer2",
+            {
+                animationEnabled: true,
+                title: {
+                    text: "Values"
+                },
+                axisX: {
+                    interval: 10,
+                },
+                data: [
+                    {
+                        type: "column",
+
+                        legendMarkerType: "triangle",
+                        legendMarkerColor: "green",
+                        color: "#741de4",
+                        showInLegend: true,
+                        legendText: "Values",
+                        dataPoints: [
+                            { x: 10, y: {{Openness_to_change}}, label: "Openness_to_change" },
+                            { x: 20, y: {{Conservation}}, label: "Conservation" },
+                            { x: 30, y: {{Hedonism}}, label: "Hedonism" },
+                            { x: 40, y: {{Self_enhancement}}, label: "Self_enhancement" },
+                            { x: 50, y: {{Self_transcendence}}, label: "Self_transcendence" }
+                        ]
+                    },
+                ]
+            });
+        chart.render();
+
+    </script>
+
+
+
+
+    <footer id="footer">
+        <div class="footer-top">
+            <div class="container">
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong>Molly</strong>. All Rights Reserved
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery-migrate.min.js' %}"></script>
+    <script src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+    <script src="{% static 'lib/superfish/hoverIntent.js' %}"></script>
+    <script src="{% static 'lib/superfish/superfish.min.js' %}"></script>
+
+    <!-- Contact Form JavaScript File -->
+    <script src="{% static 'contactform.js' %}"></script>
+
+    <script src="{% static 'js/home.js' %}"></script>
+
+    <!-- Font Awesome CDN -->
+    <script src="https://kit.fontawesome.com/43528f0353.js"></script>
+
+</body>
+
+</html>
